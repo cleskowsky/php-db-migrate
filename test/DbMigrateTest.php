@@ -1,6 +1,6 @@
 <?php
 
-require '../src/DbMigrate.php';
+include 'DbMigrate.php';
 
 class DbMigrateTest extends PHPUnit_Framework_TestCase
 {
@@ -8,7 +8,7 @@ class DbMigrateTest extends PHPUnit_Framework_TestCase
     {
         $db = new DbMigrate();
         $db->createTable('orders');
-        $this->assertTrue(1 == count($db->_getNewTables()), 'Expected a table description waiting for creation');
+        $this->assertTrue(1 == count($db->_getNewTables()), 'Expect \'orders\' table should be created');
     }
 }
 

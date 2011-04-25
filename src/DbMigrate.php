@@ -1,15 +1,15 @@
 <?php
 
 /**
- * DbMigrate makes database changes -currently mysql only- as
- * defined by implementors of this class
+ * DbMigrate makes database changes as defined by implementors
+ * of this class
  *
  * Key methods: up, down
  */
 class DbMigrate
 {
     /*
-     * Tables to be created
+     * New tables
      */
     private $newTables = array();
     

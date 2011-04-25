@@ -1,0 +1,12 @@
+<phpunit>
+    <testsuites>
+        <testsuite name="all">
+            <directory>test</directory>
+        </testsuite>
+    </testsuites>
+
+    <!-- add src to includepath -->
+    <php>
+        <includePath>src</includePath>
+    </php>
+</phpunit>
