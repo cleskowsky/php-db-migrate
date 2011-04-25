@@ -1,12 +1,15 @@
 <?php
 
 /**
- * DbMigrate makes database changes as defined by implementors
- * of this class
+ * MigrationRunner makes changes to a database schema based
+ * on migration files provided as input
+ *
+ * Supported operations: 
+ *     create table
  *
  * Key methods: up, down
  */
-class DbMigrate
+class MigrationRunner
 {
     /*
      * New tables
