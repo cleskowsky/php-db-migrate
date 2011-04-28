@@ -8,7 +8,9 @@
 class Ddl_Table
 {
     private $name;
+
     private $columns = array();
+    private $primaryKey = array();
     
     function __construct($name)
     {
@@ -32,7 +34,7 @@ class Ddl_Table
     /**
      * Creates columns of various types
      * @param $type string the type of column to create
-     * @param $options array column constraints (eg. limit)
+     * @param $args array column constraints (eg. limit)
      * @return $mixed return this table for chaining
      */
     function __call($type, $args)
@@ -43,16 +45,68 @@ class Ddl_Table
         }
         
         $name = $args[0]; 
-        
+
+        // add defaults for options not specified in args
         $options = array();
         if (isset($args[1])) {
             $options = $args[1];
         }
+        $options['primary'] = isset($options['primary']) ? $options['primary'] : false;
         
         $klass = 'Ddl_' . ucfirst($type);
-        $this->columns []= new Ddl_Column($name, new $klass);
+        $this->_addColumn(new Ddl_Column($name, new $klass), $options['primary']);
         
         return $this;
+    }
+    
+    /**
+     * Returns this table's primary key column
+     * @return $array an array of columns set as this table's primary key
+     */
+    public function getPrimaryKey()
+    {
+        return $this->primaryKey;
+    }
+    
+    private function _addColumn($col, $primary)
+    {
+        $this->columns []= $col;
+        if ($primary) {
+            if (!empty($this->primaryKey)) {
+                throw new Exception('Table can\'t have more than 1 primary key');
+            }
+            $this->primaryKey []= $col;
+        }
+    }
+    
+    /**
+     * Sets primary key for table (Key can be compound or 1 column.)
+     */
+    function setPrimaryKey($key_columns)
+    {
+        if (empty($key_columns)) {
+            return;
+        }
+        
+        if (is_array($key_columns)) {
+            $this->primaryKey = array();
+            foreach ($key_columns as $key_column) {
+                $this->primaryKey []= $this->_getColumn($key_column);
+            }
+        } else {
+            $key_column = $key_columns;
+            $this->primaryKey []= $this->_getColumn($key_column);
+        }
+    }
+    
+    private function _getColumn($key_column)
+    {
+        for ($i = 0, $found = false; !$found; $i++) {
+            $col = $this->columns[$i];
+            if ($key_column == $col->getName()) {
+                return $col;
+            }
+        }        
     }
 }
 
