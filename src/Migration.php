@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Migration base class
+ * A Migration. [Abstract]
  */
 abstract class Migration 
 {
@@ -22,8 +22,8 @@ abstract class Migration
         return $t;
     }
     
-    /**
-     * For testing...
+    /*
+     * for testing...
      */
     function _getNewTables()
     {

@@ -79,7 +79,7 @@ class MigrationTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(1 == count($tables[0]->getColumns()));
         $columns = $tables[0]->getColumns();
         $this->assertEquals('id', $columns[0]->getName());
-        $this->assertEquals('Ddl_Integer', get_class($columns[0]->getType()));
+        $this->assertEquals('Ddl_Mysql_Integer', get_class($columns[0]->getType()));
     }
     
     function testDefaultIntegerTypeShouldBeInt11()

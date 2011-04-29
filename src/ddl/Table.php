@@ -2,8 +2,6 @@
 
 /**
  * A db table
- *
- * Contains: columns
  */
 class Ddl_Table
 {
@@ -53,7 +51,7 @@ class Ddl_Table
         }
         $options['primary'] = isset($options['primary']) ? $options['primary'] : false;
         
-        $klass = 'Ddl_' . ucfirst($type);
+        $klass = 'Ddl_Mysql_' . ucfirst($type);
         $this->_addColumn(new Ddl_Column($name, new $klass), $options['primary']);
         
         return $this;
@@ -99,11 +97,11 @@ class Ddl_Table
         }
     }
     
-    private function _getColumn($key_column)
+    private function _getColumn($name)
     {
         for ($i = 0, $found = false; !$found; $i++) {
             $col = $this->columns[$i];
-            if ($key_column == $col->getName()) {
+            if ($name == $col->getName()) {
                 return $col;
             }
         }        
