@@ -11,7 +11,7 @@ I don't have much yet by any means, but what little I do have is already much be
 What
 ====
 
-	This:
+This:
 
 	create table A (
 		`id` int(11) primary key,
@@ -19,7 +19,7 @@ What
 		`body` text not null
 	) engine=innodb;
 
-	Becomes:
+Becomes:
 
 	function up() {
 		$t = new Ddl_Table('A');
