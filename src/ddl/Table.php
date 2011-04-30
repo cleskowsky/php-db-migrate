@@ -9,6 +9,7 @@ class Ddl_Table
 
     private $columns = array();
     private $primaryKey = array();
+    private $foreignKeys = array();
     
     function __construct($name)
     {
@@ -16,8 +17,7 @@ class Ddl_Table
     }
     
     /**
-     * Return an array of this table's columns
-     * @return array this table's columns (if any)
+     * @return an array of this table's columns (if any)
      */
     function getColumns()
     {
@@ -105,6 +105,21 @@ class Ddl_Table
                 return $col;
             }
         }        
+    }
+    
+    /**
+     * Creates a new foreign key on this table and returns it. 
+     * Note: A call to key() _must_ always be followed by a call to references()
+     *       eg. $fk->key('user_id')->references('users', 'id');
+     * @param $name name of key column
+     * @return the new foreign key
+     */
+    function key($name)
+    {
+        $col = $this->_getColumn($name);
+        $key = new Ddl_ForeignKey($col);
+        $this->foreignKeys = $key;
+        return $key;
     }
 }
 

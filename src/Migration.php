@@ -17,9 +17,9 @@ abstract class Migration
      */
     function createTable($name)
     {
-        $t = new Ddl_Table($name);
-        $this->newTables []= $t;
-        return $t;
+        $tbl = new Ddl_Table($name);
+        $this->newTables []= $tbl;
+        return $tbl;
     }
     
     /*
