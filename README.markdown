@@ -16,7 +16,7 @@ This:
 	create table A (
 		`id` int(11) primary key,
 		`title` varchar (255) not null,
-		`body` text not null
+		`body` text
 	) engine=innodb;
 
 Becomes:
@@ -24,7 +24,7 @@ Becomes:
 	function up() {
 		$t = new Ddl_Table('A');
 		$t->integer('id', array('primary' => true));
-		$t->text('title', array('limit' => 255));
+		$t->text('title', array('limit' => 255, 'null' => false));
 		$t->text('body');
 	}
 
