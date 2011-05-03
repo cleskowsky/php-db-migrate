@@ -28,7 +28,7 @@ class Ddl_Key
     
     function get_local_column()
     {
-        return $this->local_column->getName();
+        return $this->local_column->get_name();
     }
 }
 

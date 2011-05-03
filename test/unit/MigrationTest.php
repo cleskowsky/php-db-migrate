@@ -4,7 +4,7 @@
  * Somebody other than the tests is going to have to load bootstrap
  * [Possibly an eventual migration runner]
  */
-include '../config/bootstrap.php';
+include 'config/bootstrap.php';
 
 class TestMigration_Good1 extends Migration 
 {
