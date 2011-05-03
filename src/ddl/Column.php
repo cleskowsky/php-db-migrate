@@ -6,54 +6,48 @@
 class Ddl_Column
 {
     private $name, $type;
-    private $notNull, $defaultValue;
+    private $allow_null, $default_value;
     
     /**
      * Creates a new table column
      *
      * @param $name string the column name
      * @param $type string the type of this column [eg. Integer, Text, etc.]
-     * @param $notNull allow null values in this column
-     * @param $defaultValue set initial value of column if none provided
+     * @param $allow_null allow null values in this column?
+     * @param $default_value set initial value of column if none provided
      */
-    function Ddl_Column($name, $type, $notNull = false, $defaultValue = null)
+    function Ddl_Column($name, $type, $allow_null = true, $default_value = null)
     {
         $this->name         = $name;
         $this->type         = $type;
         
-        if (is_bool($notNull)) {
-            $this->notNull      = $notNull;            
+        if (is_bool($allow_null)) {
+            $this->allow_null = $allow_null;            
         } else {
-            throw new Exception('$notNull must be true or false');
+            throw new Exception('$allow_null must be true or false');
         }
         
-        $this->defaultValue = $defaultValue;
+        $this->default_value = $default_value;
     }
     
-    function getName()
+    function get_name()
     {
         return $this->name;
     }
     
-    function getType()
+    function get_type()
     {
         return $this->type;
     }
     
-    /*
-     * for testing...
-     */
-    function _getNotNull()
+    function get_allow_null()
     {
-        return $this->notNull;
+        return $this->allow_null;
     }
     
-    /*
-     * for testing...
-     */
-    function _getDefaultValue()
+    function get_default_value()
     {
-        return $this->defaultValue;
+        return $this->default_value;
     }
 }
 

@@ -4,13 +4,13 @@
  * Somebody other than the tests is going to have to load bootstrap
  * [Possibly an eventual migration runner]
  */
-include 'config/bootstrap.php';
+include '../config/bootstrap.php';
 
 class TestMigration_Good1 extends Migration 
 {
     function up()
     {
-        $t = $this->createTable('A');
+        $t = $this->create_table('A');
         $t->integer('id', array('primary' => true));
     }
     
@@ -21,10 +21,10 @@ class TestMigration_Good2 extends Migration
 {
     function up()
     {
-        $t = $this->createTable('A');
+        $t = $this->create_table('A');
         $t->integer('id');
         $t->integer('col1');
-        $t->setPrimaryKey(array('id', 'col1'));
+        $t->set_primary_key(array('id', 'col1'));
     }
     
     function down() {}
@@ -34,10 +34,10 @@ class TestMigration_Good3 extends Migration
 {
     function up()
     {
-        $t = $this->createTable('A');
+        $t = $this->create_table('A');
         $t->integer('id');
         $t->integer('col1');
-        $t->setPrimaryKey('id');
+        $t->set_primary_key('id');
     }
     
     function down() {}
@@ -47,10 +47,10 @@ class TestMigration_Bad extends Migration
 {
     function up()
     {
-        $t = $this->createTable('B');
+        $t = $this->create_table('B');
         $t->integer('id', array('primary' => true));
 
-        // second primary key
+        // second primary key should fail
         $t->integer('col1', array('primary' => true));
     }
     
@@ -60,52 +60,52 @@ class TestMigration_Bad extends Migration
 
 class MigrationTest extends PHPUnit_Framework_TestCase
 {
-    function testCreateTable()
+    function test_create_table()
     {
         $m = new TestMigration_Good1();
         $m->up();
 
-        $this->assertTrue(1 == count($m->_getNewTables()), 'Expect 1 table should be created');
-        $tables = $m->_getNewTables();
-        $this->assertEquals('A', $tables[0]->getName());
+        $this->assertTrue(1 == count($m->get_new_tables()), 'Expect 1 table should be created');
+        $tables = $m->get_new_tables();
+        $this->assertEquals('A', $tables[0]->get_name());
     }
     
-    function testCreateColumn()
+    function test_create_column()
     {
         $m = new TestMigration_Good1();
         $m->up();
 
-        $tables = $m->_getNewTables();
-        $this->assertTrue(1 == count($tables[0]->getColumns()));
-        $columns = $tables[0]->getColumns();
-        $this->assertEquals('id', $columns[0]->getName());
-        $this->assertEquals('Ddl_Mysql_Integer', get_class($columns[0]->getType()));
+        $tables = $m->get_new_tables();
+        $this->assertTrue(1 == count($tables[0]->get_columns()));
+        $columns = $tables[0]->get_columns();
+        $this->assertEquals('id', $columns[0]->get_name());
+        $this->assertEquals('Ddl_Mysql_Integer', get_class($columns[0]->get_type()));
     }
     
-    function testDefaultIntegerTypeShouldBeInt11()
+    function test_default_integer_type_should_be_int11()
     {
         $m = new TestMigration_Good1();
         $m->up();
 
-        $tables = $m->_getNewTables();
-        $columns = $tables[0]->getColumns();
-        $type = $columns[0]->getType();
-        $this->assertEquals('medium', $type->getLimit());
+        $tables = $m->get_new_tables();
+        $columns = $tables[0]->get_columns();
+        $type = $columns[0]->get_type();
+        $this->assertEquals('medium', $type->get_limit());
         $this->assertRegexp('/int\(11\)/', (string)$type);
     }
     
-    function testSetPrimaryKey()
+    function test_set_primary_key()
     {
         $m = new TestMigration_Good1();
         $m->up();
 
-        $tables = $m->_getNewTables();
-        $columns = $tables[0]->getColumns();
-        $key = $tables[0]->getPrimaryKey();
-        $this->assertEquals('id', $key[0]->getName());
+        $tables = $m->get_new_tables();
+        $columns = $tables[0]->get_columns();
+        $key = $tables[0]->get_primary_key();
+        $this->assertEquals('id', $key[0]->get_name());
     }
     
-    function testSettingSecondPrimaryKeyOnTableFails()
+    function test_setting_second_primary_key_on_table_fails()
     {
         $m = new TestMigration_Bad();
         try {
@@ -116,25 +116,25 @@ class MigrationTest extends PHPUnit_Framework_TestCase
         $this->fail('Expect setting 2 columns primary throws an exception');
     }
     
-    function testCompoundPrimaryKeys()
+    function test_compound_primary_keys()
     {
         $m = new TestMigration_Good2();
         $m->up();
         
-        $tables = $m->_getNewTables();
-        $key = $tables[0]->getPrimaryKey();
+        $tables = $m->get_new_tables();
+        $key = $tables[0]->get_primary_key();
         $this->assertTrue(is_array($key), 'Expect primary key is array type');
         $this->assertTrue(2 == count($key), 'Expect 2 columns for primary key');
-        $this->assertEquals('id', $key[0]->getName());
-        $this->assertEquals('col1', $key[1]->getName());
+        $this->assertEquals('id', $key[0]->get_name());
+        $this->assertEquals('col1', $key[1]->get_name());
         
         // set a single key
         $m = new TestMigration_Good3();
         $m->up();
 
-        $tables = $m->_getNewTables();
-        $key = $tables[0]->getPrimaryKey();
-        $this->assertEquals('id', $key[0]->getName());
+        $tables = $m->get_new_tables();
+        $key = $tables[0]->get_primary_key();
+        $this->assertEquals('id', $key[0]->get_name());
     }
 }
 
