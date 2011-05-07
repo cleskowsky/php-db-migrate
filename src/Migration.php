@@ -17,7 +17,8 @@ abstract class Migration
      */
     function create_table($name)
     {
-        $tbl = new Ddl_Table($name);
+        $tbl = new Ddl_Table($name);        
+        $tbl->integer('id', array('primary' => true));
         $this->new_tables []= $tbl;
         return $tbl;
     }
