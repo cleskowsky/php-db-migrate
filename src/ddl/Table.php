@@ -5,15 +5,21 @@
  */
 class Ddl_Table
 {
-    private $name;
+    private $name, $primary_key;
 
     private $columns = array();
-    private $primary_key = array();
     private $foreign_keys = array();
     
-    function __construct($name)
+    /**
+     * Creates a new db table
+     * @param $name the table of this new table
+     * @param $primary_key an array of column names representing this table's
+     *        primary key
+     */
+    function __construct($name, $primary_key = array())
     {
         $this->name = $name;
+        $this->primary_key = $primary_key;
     }
     
     /**
@@ -52,14 +58,21 @@ class Ddl_Table
         $options['primary'] = isset($options['primary']) ? $options['primary'] : false;
         
         $klass = 'Ddl_Mysql_' . ucfirst($type);
-        $this->add_column(new Ddl_Column($name, new $klass), $options['primary']);
+        $col = new Ddl_Column($name, new $klass);
+        $this->add_column($col, $options['primary']);
+
+        // is column part of table's primary key?
+        $index = array_search($name, $this->primary_key, true);
+        if (false !== $index) {
+            $this->primary_key[$index] = $col;
+        }
         
         return $this;
     }
     
     /**
      * Returns this table's primary key column
-     * @return $array an array of columns set as this table's primary key
+     * @return an array of columns set as this table's primary key
      */
     public function get_primary_key()
     {
@@ -74,26 +87,6 @@ class Ddl_Table
                 throw new Exception('Table can\'t have more than 1 primary key');
             }
             $this->primary_key []= $col;
-        }
-    }
-    
-    /**
-     * Sets primary key for table (Key can be compound or 1 column.)
-     */
-    function set_primary_key($key_columns)
-    {
-        if (empty($key_columns)) {
-            return;
-        }
-        
-        if (is_array($key_columns)) {
-            $this->primary_key = array();
-            foreach ($key_columns as $key_column) {
-                $this->primary_key []= $this->get_column($key_column);
-            }
-        } else {
-            $key_column = $key_columns;
-            $this->primary_key []= $this->get_column($key_column);
         }
     }
     
@@ -120,6 +113,25 @@ class Ddl_Table
         $key = new Ddl_Key($col);
         $this->foreign_keys = $key;
         return $key;
+    }
+    
+    function validates()
+    {
+        return $this->_verify_all_primary_key_columns_defined();
+    }
+    
+    private function _verify_all_primary_key_columns_defined()
+    {
+        if (empty($this->primary_key)) {
+            return true;
+        }
+        
+        foreach ($this->primary_key as $key) {
+            if (is_string($key)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 

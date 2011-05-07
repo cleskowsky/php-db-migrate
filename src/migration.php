@@ -12,13 +12,18 @@ abstract class Migration
     
     /**
      * Create new table
-     * @param string a name for our new table
-     * @return mixed the new table [for adding columns]
+     * @param $name a name for our new table
+     * @param $args override migration-assistant defaults for new tables
+     * @return the new table [for adding columns]
      */
-    function create_table($name)
-    {
-        $tbl = new Ddl_Table($name);        
-        $tbl->integer('id', array('primary' => true));
+    function create_table($name, $args = array())
+    {        
+        if (!empty($args) and isset($args['primary_key'])) {
+            $tbl = new Ddl_Table($name, $args['primary_key']);
+        } else {
+            $tbl = new Ddl_Table($name);
+            $tbl->integer('id', array('primary' => true));            
+        }
         $this->new_tables []= $tbl;
         return $tbl;
     }

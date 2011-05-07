@@ -6,11 +6,12 @@
  */
 include 'config/bootstrap.php';
 
-class TestMigration_Good1 extends Migration 
+class TestMigration_Good1 extends Migration
 {
     function up()
     {
         $t = $this->create_table('A');
+        $t->integer('col1');
     }
     
     function down() {}
@@ -20,20 +21,12 @@ class TestMigration_Good2 extends Migration
 {
     function up()
     {
-        $t = $this->create_table('A');
+        $t = $this->create_table('A', array
+        (
+            'primary_key' => array('col1', 'col2')
+        ));
         $t->integer('col1');
-        $t->set_primary_key(array('id', 'col1'));
-    }
-    
-    function down() {}
-}
-
-class TestMigration_Good3 extends Migration
-{
-    function up()
-    {
-        $t = $this->create_table('A');
-        $t->integer('col1');
+        $t->text('col2');
     }
     
     function down() {}
@@ -43,7 +36,7 @@ class TestMigration_Bad extends Migration
 {
     function up()
     {
-        $t = $this->create_table('B');
+        $t = $this->create_table('A');
 
         // recall new tables get primary key 'id' unless otherwise
         // specified...
@@ -53,7 +46,6 @@ class TestMigration_Bad extends Migration
     
     function down() {}
 }
-
 
 class MigrationTest extends PHPUnit_Framework_TestCase
 {
@@ -65,11 +57,15 @@ class MigrationTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(1 == count($m->get_new_tables()), 'Expect 1 table should be created');
         $tables = $m->get_new_tables();
         $this->assertEquals('A', $tables[0]->get_name());
+        
+        // new tables get an id primary key field
+        $key = $tables[0]->get_primary_key();
+        $this->assertEquals('id', $key[0]->get_name());
     }
     
     function test_create_column()
     {
-        $m = new TestMigration_Good3();
+        $m = new TestMigration_Good1();
         $m->up();
 
         $tables = $m->get_new_tables();
@@ -89,17 +85,6 @@ class MigrationTest extends PHPUnit_Framework_TestCase
         $type = $columns[0]->get_type();
         $this->assertEquals('medium', $type->get_limit());
         $this->assertRegexp('/int\(11\)/', (string)$type);
-    }
-    
-    function test_set_primary_key()
-    {
-        $m = new TestMigration_Good1();
-        $m->up();
-
-        $tables = $m->get_new_tables();
-        $columns = $tables[0]->get_columns();
-        $key = $tables[0]->get_primary_key();
-        $this->assertEquals('id', $key[0]->get_name());
     }
     
     function test_setting_second_primary_key_on_table_fails()
@@ -122,18 +107,8 @@ class MigrationTest extends PHPUnit_Framework_TestCase
         $key = $tables[0]->get_primary_key();
         $this->assertTrue(is_array($key), 'Expect primary key is array type');
         $this->assertTrue(2 == count($key), 'Expect 2 columns for primary key');
-        $this->assertEquals('id', $key[0]->get_name());
-        $this->assertEquals('col1', $key[1]->get_name());
-    }
-    
-    function test_create_table_auto_creates_primarykey_id()
-    {
-        $m = new TestMigration_Good1();
-        $m->up();
-        
-        $tables = $m->get_new_tables();
-        $key = $tables[0]->get_primary_key();
-        $this->assertEquals('id', $key[0]->get_name());
+        $this->assertEquals('col1', $key[0]->get_name());
+        $this->assertEquals('col2', $key[1]->get_name());
     }
 }
 
