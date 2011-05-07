@@ -50,16 +50,9 @@ class Ddl_Table
         
         $name = $args[0]; 
 
-        // add defaults for options not specified in args
-        $options = array();
-        if (isset($args[1])) {
-            $options = $args[1];
-        }
-        $options['primary'] = isset($options['primary']) ? $options['primary'] : false;
-        
         $klass = 'Ddl_Mysql_' . ucfirst($type);
         $col = new Ddl_Column($name, new $klass);
-        $this->add_column($col, $options['primary']);
+        $this->columns []= $col;
 
         // is column part of table's primary key?
         $index = array_search($name, $this->primary_key, true);
@@ -77,17 +70,6 @@ class Ddl_Table
     public function get_primary_key()
     {
         return $this->primary_key;
-    }
-    
-    private function add_column($col, $primary)
-    {
-        $this->columns []= $col;
-        if ($primary) {
-            if (!empty($this->primary_key)) {
-                throw new Exception('Table can\'t have more than 1 primary key');
-            }
-            $this->primary_key []= $col;
-        }
     }
     
     private function get_column($name)

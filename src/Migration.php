@@ -21,8 +21,8 @@ abstract class Migration
         if (!empty($args) and isset($args['primary_key'])) {
             $tbl = new Ddl_Table($name, $args['primary_key']);
         } else {
-            $tbl = new Ddl_Table($name);
-            $tbl->integer('id', array('primary' => true));            
+            $tbl = new Ddl_Table($name, array('id'));
+            $tbl->integer('id');
         }
         $this->new_tables []= $tbl;
         return $tbl;

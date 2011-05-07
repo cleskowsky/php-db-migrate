@@ -32,21 +32,6 @@ class TestMigration_Good2 extends Migration
     function down() {}
 }
 
-class TestMigration_Bad extends Migration
-{
-    function up()
-    {
-        $t = $this->create_table('A');
-
-        // recall new tables get primary key 'id' unless otherwise
-        // specified...
-        // second primary key should fail
-        $t->integer('col1', array('primary' => true));
-    }
-    
-    function down() {}
-}
-
 class MigrationTest extends PHPUnit_Framework_TestCase
 {
     function test_create_table()
@@ -85,17 +70,6 @@ class MigrationTest extends PHPUnit_Framework_TestCase
         $type = $columns[0]->get_type();
         $this->assertEquals('medium', $type->get_limit());
         $this->assertRegexp('/int\(11\)/', (string)$type);
-    }
-    
-    function test_setting_second_primary_key_on_table_fails()
-    {
-        $m = new TestMigration_Bad();
-        try {
-            $m->up();
-        } catch (Exception $ex) {
-            return;
-        }
-        $this->fail('Expect setting 2 columns primary throws an exception');
     }
     
     function test_compound_primary_keys()
