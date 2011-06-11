@@ -3,7 +3,6 @@
         <testsuite name="all">
             <directory>unit</directory>
             <directory>integration</directory>
-            <directory>functional</directory>
         </testsuite>
     </testsuites>
 

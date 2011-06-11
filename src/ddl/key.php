@@ -3,11 +3,11 @@
 class Ddl_Key
 {
     private $reference_column, $reference_table;
-    private $local_column;
+    private $my_column;
     
-    function __construct($local_column)
+    function __construct($my_column)
     {
-        $this->local_column = $local_column;
+        $this->my_column = $my_column;
     }
     
     function references($table, $column)
@@ -26,9 +26,9 @@ class Ddl_Key
         return $this->reference_column;
     }
     
-    function get_local_column()
+    function get_my_column()
     {
-        return $this->local_column->get_name();
+        return $this->my_column->get_name();
     }
 }
 

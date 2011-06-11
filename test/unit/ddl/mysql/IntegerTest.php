@@ -6,7 +6,7 @@ class Ddl_Mysql_IntegerTest extends PHPUnit_Framework_TestCase
     {
         $type = new Ddl_Mysql_Integer('large');
         $this->assertEquals('large', $type->get_limit());
-        $this->assertRegexp('/bigint\(20\)/', (string)$type);
+        $this->assertRegexp('/bigint/', (string)$type);
     }
 }
 

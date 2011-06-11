@@ -12,7 +12,7 @@ class Ddl_KeyTest extends PHPUnit_Framework_TestCase
         $fk->references($table = 'users', $field = 'id');
         $this->assertEquals('users', $fk->get_reference_table());
         $this->assertEquals('id', $fk->get_reference_column());
-        $this->assertEquals('user_id', $fk->get_local_column());
+        $this->assertEquals('user_id', $fk->get_my_column());
     }
 }
 

@@ -9,6 +9,7 @@ class Ddl_Table
 
     private $columns = array();
     private $foreign_keys = array();
+    private $indexes = array();
     
     /**
      * Creates a new db table
@@ -38,7 +39,8 @@ class Ddl_Table
     /**
      * Creates columns of various types
      * @param $type string the type of column to create
-     * @param $args array column constraints (eg. limit)
+     * @param $args args[0] contains column name, the rest are extra 
+     *        column modifiers
      * @return $mixed return this table for chaining
      */
     function __call($type, $args)
@@ -60,6 +62,10 @@ class Ddl_Table
             $this->primary_key[$index] = $col;
         }
         
+        if (isset($args[1])) {
+            $this->_handle_extra_column_modifiers($col, $args[1]);
+        }
+        
         return $this;
     }
     
@@ -74,18 +80,18 @@ class Ddl_Table
     
     private function get_column($name)
     {
-        for ($i = 0, $found = false; !$found; $i++) {
-            $col = $this->columns[$i];
-            if ($name == $col->get_name()) {
-                return $col;
+        foreach ($this->columns as $c) {
+            if ($name == $c->get_name()) {
+                return $c;
             }
         }
+        return false;
     }
     
     /**
      * Creates a new foreign key on this table and returns it. 
      * Note: A call to key() _must_ always be followed by a call to references()
-     *       eg. $fk->key('user_id')->references('users', 'id');
+     *       eg. $t->key('user_id')->references('users', 'id');
      * @param $name name of key column
      * @return the new foreign key
      */
@@ -93,7 +99,7 @@ class Ddl_Table
     {
         $col = $this->get_column($name);
         $key = new Ddl_Key($col);
-        $this->foreign_keys = $key;
+        $this->foreign_keys []= $key;
         return $key;
     }
     
@@ -114,6 +120,52 @@ class Ddl_Table
             }
         }
         return true;
+    }
+    
+    function get_keys()
+    {
+        return $this->foreign_keys;
+    }
+    
+    function get_indexes()
+    {
+        return $this->indexes;
+    }
+    
+    private function _handle_extra_column_modifiers(& $col, $extras)
+    {
+        if (isset($extras['indexed'])) {
+            $this->indexes []= $col;
+        }
+    }
+    
+    /**
+     * Supports adding single, multi column indexes
+     * @param $names column(s) to index over
+     * @return this table for method chaining
+     */
+    function add_index($names)
+    {
+        if (! is_array($names)) {
+            $col = $this->get_column($names);
+            if (! $col) {
+                throw new Exception('Column doesn\'t exist');
+            }
+            $this->indexes []= $col;
+            return $this;        
+        }
+        
+        $columns_for_index = array();
+        foreach($names as $name) {
+            $col = $this->get_column($name);
+            if (! $col) {
+                throw new Exception('Column doesn\'t exist');
+            }
+            $columns_for_index []= $col;
+        }
+        $this->indexes []= $columns_for_index;
+        
+        return $this;
     }
 }
 

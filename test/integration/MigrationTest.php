@@ -69,7 +69,7 @@ class MigrationTest extends PHPUnit_Framework_TestCase
         $columns = $tables[0]->get_columns();
         $type = $columns[0]->get_type();
         $this->assertEquals('medium', $type->get_limit());
-        $this->assertRegexp('/int\(11\)/', (string)$type);
+        $this->assertRegexp('/int/', (string)$type);
     }
     
     function test_compound_primary_keys()
