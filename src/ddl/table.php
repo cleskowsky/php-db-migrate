@@ -52,8 +52,8 @@ class Ddl_Table
         
         $name = $args[0]; 
 
-        $klass = 'Ddl_Mysql_' . ucfirst($type);
-        $col = new Ddl_Column($name, new $klass);
+        $class = 'Ddl_DataTypes_' . ucfirst($type);
+        $col = new Ddl_Column($name, new $class);
         $this->columns []= $col;
 
         // is column part of table's primary key?

@@ -1,10 +1,6 @@
 <?php
 
-/*
- * Somebody other than the tests is going to have to load bootstrap
- * [Eventually this will be migration runner]
- */
-include 'config/bootstrap.php';
+include 'Autoloader.php';
 
 class TestMigration_Good1 extends Migration
 {
@@ -57,7 +53,7 @@ class MigrationTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(2 == count($tables[0]->get_columns()));
         $columns = $tables[0]->get_columns();
         $this->assertEquals('col1', $columns[1]->get_name());
-        $this->assertEquals('Ddl_Mysql_Integer', get_class($columns[1]->get_type()));
+        $this->assertEquals('Ddl_DataTypes_Integer', get_class($columns[1]->get_type()));
     }
     
     function test_default_integer_type_should_be_int11()
@@ -92,7 +88,6 @@ class MigrationTest extends PHPUnit_Framework_TestCase
         
         $tables = $m->get_new_tables();
         $key = $tables[0]->get_primary_key();
-print_r($key);
         $this->assertTrue($key->is_auto_incrementing(), 'Expect primary key id is auto_incrementing');
     }
 }
