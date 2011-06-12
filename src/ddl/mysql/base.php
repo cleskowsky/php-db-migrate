@@ -26,6 +26,12 @@ abstract class Ddl_Mysql_Base
         }
         return "";
     }
+    
+    /**
+     * Subclasses may not need to override this. (Called by column on
+     * add.)
+     */
+    function handle_extras($extras) {}
 }
 
 ?>

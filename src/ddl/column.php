@@ -6,28 +6,17 @@
 class Ddl_Column
 {
     private $name, $type;
-    private $allow_null, $default_value;
     
     /**
      * Creates a new table column
      *
      * @param $name string the column name
-     * @param $type string the type of this column [eg. Integer, Text, etc.]
-     * @param $allow_null allow null values in this column?
-     * @param $default_value set initial value of column if none provided
+     * @param $type string the type of this column [eg. int, text, etc.]
      */
-    function Ddl_Column($name, $type, $allow_null = true, $default_value = null)
+    function Ddl_Column($name, $type)
     {
         $this->name         = $name;
         $this->type         = $type;
-        
-        if (is_bool($allow_null)) {
-            $this->allow_null = $allow_null;            
-        } else {
-            throw new Exception('$allow_null must be true or false');
-        }
-        
-        $this->default_value = $default_value;
     }
     
     function get_name()
@@ -40,14 +29,22 @@ class Ddl_Column
         return $this->type;
     }
     
-    function get_allow_null()
+    /**
+     * Let contained type initialize from extras if necessary
+     */
+    function handle_extras($extras)
     {
-        return $this->allow_null;
+        $this->type->handle_extras($extras);
     }
     
-    function get_default_value()
+    /**
+     * Send unhandled methods to contained type
+     *
+     * eg. $key->is_auto_incrementing();
+     */
+    function __call($func, $args)
     {
-        return $this->default_value;
+        return $this->type->{$func}();
     }
 }
 

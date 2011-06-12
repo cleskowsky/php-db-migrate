@@ -75,6 +75,9 @@ class Ddl_Table
      */
     public function get_primary_key()
     {
+        if (1 == count($this->primary_key)) {
+            return $this->primary_key[0];
+        }
         return $this->primary_key;
     }
     
@@ -134,6 +137,8 @@ class Ddl_Table
     
     private function _handle_extra_column_modifiers(& $col, $extras)
     {
+        $col->handle_extras($extras);
+
         if (isset($extras['indexed'])) {
             $this->indexes []= $col;
         }

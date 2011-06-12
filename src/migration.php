@@ -11,7 +11,15 @@ abstract class Migration
     private $new_tables = array();
     
     /**
-     * Create new table
+     * Creates new table. A primary key field, id, is created by default
+     * unless 'primary_key' extra is specified.
+     *
+     * eg. create_table('A'); Produces the sql:
+     *
+     * create table `A` (
+     *     `id` primary key auto_increment
+     * ) engine=innodb charset=utf-8;
+     *
      * @param $name a name for our new table
      * @param $args override migration-assistant defaults for new tables
      * @return the new table [for adding columns]
@@ -22,7 +30,7 @@ abstract class Migration
             $tbl = new Ddl_Table($name, $args['primary_key']);
         } else {
             $tbl = new Ddl_Table($name, array('id'));
-            $tbl->integer('id');
+            $tbl->integer('id', array('auto_increment' => true));
         }
         $this->new_tables []= $tbl;
         return $tbl;

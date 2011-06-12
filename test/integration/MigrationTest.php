@@ -45,7 +45,7 @@ class MigrationTest extends PHPUnit_Framework_TestCase
         
         // new tables get an id primary key field
         $key = $tables[0]->get_primary_key();
-        $this->assertEquals('id', $key[0]->get_name());
+        $this->assertEquals('id', $key->get_name());
     }
     
     function test_create_column()
@@ -83,6 +83,17 @@ class MigrationTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(2 == count($key), 'Expect 2 columns for primary key');
         $this->assertEquals('col1', $key[0]->get_name());
         $this->assertEquals('col2', $key[1]->get_name());
+    }
+    
+    function test_primary_key_id_is_autoincrementing()
+    {
+        $m = new TestMigration_Good1();
+        $m->up();
+        
+        $tables = $m->get_new_tables();
+        $key = $tables[0]->get_primary_key();
+print_r($key);
+        $this->assertTrue($key->is_auto_incrementing(), 'Expect primary key id is auto_incrementing');
     }
 }
 
