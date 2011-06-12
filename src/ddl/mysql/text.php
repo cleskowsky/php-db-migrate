@@ -30,7 +30,12 @@ class Ddl_Mysql_Text extends Ddl_Mysql_Base
     {
         // use varchar for integral limits
         if (is_numeric($this->limit)) {
-            return "varchar({$this->limit})";
+            if (1 == $this->limit) {
+                $str = "char(1)";
+            } else {
+                $str = "varchar({$this->limit})";
+            }
+            return $str;
         }
         return parent::__toString();
     }
