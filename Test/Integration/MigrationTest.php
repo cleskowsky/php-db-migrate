@@ -53,10 +53,10 @@ class MigrationTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(2 == count($tables[0]->get_columns()));
         $columns = $tables[0]->get_columns();
         $this->assertEquals('col1', $columns[1]->get_name());
-        $this->assertEquals('Ddl_DataTypes_Integer', get_class($columns[1]->get_type()));
+        $this->assertEquals('Ddl_DataType_Integer', get_class($columns[1]->get_type()));
     }
     
-    function test_default_integer_type_should_be_int11()
+    function test_default_integer_type_should_be_int()
     {
         $m = new TestMigration_Good1();
         $m->up();

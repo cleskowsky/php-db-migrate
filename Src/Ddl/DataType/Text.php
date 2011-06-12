@@ -13,7 +13,7 @@
  *
  * $t->text('body', array('limit' => 'medium')); # or small, large
  */
-class Ddl_DataTypes_Text extends Ddl_DataTypes_Base
+class Ddl_DataType_Text extends Ddl_DataType_Base
 {
     protected $default_limits = array(
         'small'  => 'tinytext',

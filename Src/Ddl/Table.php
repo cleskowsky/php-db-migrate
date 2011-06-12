@@ -52,7 +52,7 @@ class Ddl_Table
         
         $name = $args[0]; 
 
-        $class = 'Ddl_DataTypes_' . ucfirst($type);
+        $class = 'Ddl_DataType_' . ucfirst($type);
         $col = new Ddl_Column($name, new $class);
         $this->columns []= $col;
 

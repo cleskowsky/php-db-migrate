@@ -1,6 +1,6 @@
 <?php
 
-abstract class Ddl_DataTypes_Base
+abstract class Ddl_DataType_Base
 {
     protected $default_limits = array();
     protected $limit;

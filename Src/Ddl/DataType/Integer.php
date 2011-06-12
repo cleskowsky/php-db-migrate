@@ -3,7 +3,7 @@
 /**
  * Integer columns
  */
-class Ddl_DataTypes_Integer extends Ddl_DataTypes_Base
+class Ddl_DataType_Integer extends Ddl_DataType_Base
 {
     private $auto_incrementing = false;
     
