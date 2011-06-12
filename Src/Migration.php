@@ -14,15 +14,29 @@ abstract class Migration
      * Creates new table. A primary key field, id, is created by default
      * unless 'primary_key' extra is specified.
      *
-     * eg. create_table('A'); Produces the sql:
-     *
+     * Eg. create_table('A'); 
+     * 
+     * Produces: 
+     * 
      * create table `A` (
      *     `id` primary key auto_increment
-     * ) engine=innodb charset=utf-8;
+     * ) engine=innodb default character set=utf8;
+     *
+     * Eg. $t = create_table('B', array('col1', 'col2'));
+     *     $t->integer('col1');
+     *     $t->integer('col2');
+     *
+     * Produces:
+     *
+     * create table `B` (
+     *     `col1` int(11) not null,
+     *     `col2` int(11) not null,
+     *     primary key (`col1`, `col2`)
+     * ) engine=innodb default character set=utf8;
      *
      * @param $name a name for our new table
      * @param $args override migration-assistant defaults for new tables
-     * @return the new table [for adding columns]
+     * @return the new table
      */
     function create_table($name, $args = array())
     {        

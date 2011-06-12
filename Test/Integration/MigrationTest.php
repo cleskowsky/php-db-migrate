@@ -1,38 +1,15 @@
 <?php
 
-include 'Autoloader.php';
+require_once 'Autoloader.php';
 
-class TestMigration_Good1 extends Migration
-{
-    function up()
-    {
-        $t = $this->create_table('A');
-        $t->integer('col1');
-    }
-    
-    function down() {}
-}
-
-class TestMigration_Good2 extends Migration
-{
-    function up()
-    {
-        $t = $this->create_table('A', array
-        (
-            'primary_key' => array('col1', 'col2')
-        ));
-        $t->integer('col1');
-        $t->text('col2');
-    }
-    
-    function down() {}
-}
+require_once 'Data/Migration1.php';
+require_once 'Data/Migration2.php';
 
 class MigrationTest extends PHPUnit_Framework_TestCase
 {
     function test_create_table()
     {
-        $m = new TestMigration_Good1();
+        $m = new Migration1();
         $m->up();
 
         $this->assertTrue(1 == count($m->get_new_tables()), 'Expect 1 table should be created');
@@ -46,7 +23,7 @@ class MigrationTest extends PHPUnit_Framework_TestCase
     
     function test_create_column()
     {
-        $m = new TestMigration_Good1();
+        $m = new Migration1();
         $m->up();
 
         $tables = $m->get_new_tables();
@@ -58,7 +35,7 @@ class MigrationTest extends PHPUnit_Framework_TestCase
     
     function test_default_integer_type_should_be_int()
     {
-        $m = new TestMigration_Good1();
+        $m = new Migration1();
         $m->up();
 
         $tables = $m->get_new_tables();
@@ -70,7 +47,7 @@ class MigrationTest extends PHPUnit_Framework_TestCase
     
     function test_compound_primary_keys()
     {
-        $m = new TestMigration_Good2();
+        $m = new Migration2();
         $m->up();
         
         $tables = $m->get_new_tables();
@@ -83,7 +60,7 @@ class MigrationTest extends PHPUnit_Framework_TestCase
     
     function test_primary_key_id_is_autoincrementing()
     {
-        $m = new TestMigration_Good1();
+        $m = new Migration1();
         $m->up();
         
         $tables = $m->get_new_tables();

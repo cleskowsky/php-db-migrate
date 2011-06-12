@@ -1,13 +1,13 @@
 <phpunit>
     <testsuites>
         <testsuite name="all">
-            <directory>unit</directory>
-            <directory>integration</directory>
+            <directory>Unit</directory>
+            <directory>Integration</directory>
         </testsuite>
     </testsuites>
 
     <!-- add src to includepath -->
     <php>
-        <includePath>../src</includePath>
+        <includePath>../Src</includePath>
     </php>
 </phpunit>
